@@ -1,9 +1,10 @@
 person_width = 2
-person_height = 40
-slot_width = 7
-platform_pixel_width = 200
-platform_pixel_height = 21
-platform_width_factor = 6
-platform_height_factor = 1
-floor_height=50
+person_height = 5
+slot_width = 4
+platform_pixel_width = 40
+platform_pixel_height = 2
+floor_height= 20
+slot_gap_width = 10
+lift_gap_width = 4
 update_frames = 5 #refresh screen after every n draws, when used. Higher equals faster animation.
+SHAPE_LENGTH = 20 #Default width of a turtle. Not changeable.
