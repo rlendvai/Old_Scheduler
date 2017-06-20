@@ -10,7 +10,7 @@ if DEBUG:
 
 def main():
     screen.tracer(50,0)
-    floors = 2
+    floors = 10
     lifts = 3
     my_crowd = Q(200,bless=True, floor_start=1, floor_end=floors)
     my_building = Building(num_lifts = lifts, num_floors = floors)

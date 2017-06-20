@@ -3,6 +3,7 @@ import config
 import random
 import itertools
 import math
+import time
 
 global screen
 screen = Screen()
@@ -125,7 +126,7 @@ class Lift():
                     slot.load(next_person)
         Q.people = people
         return Q
-    def unload(self):
+    def unload(self, pause = .2):
         for slot in self.slots:
             if slot.isLoaded():
                 if slot.person.goal_floor == round(self.current_floor):
@@ -139,7 +140,7 @@ class Lift():
         self.platform.show()
 
     #moves the lift and the people in it
-    def move(self, distance):
+    def move_pixels(self, distance):
         update_frames = config.update_frames
         for i in range (distance):
             for slot in self.slots:
@@ -147,7 +148,7 @@ class Lift():
             self.platform.move(1)
         #screen.update()
     def move_floors(self, floors=1):
-        self.move(self.floor_height*floors)
+        self.move_pixels(round(self.floor_height * floors))
         self.current_floor = self.current_floor + floors
         return self.current_floor
 
@@ -253,7 +254,10 @@ class Building():
                 yield
             lift.unload()
             print("unloading floor: ", r)
+            screen.update()
+            time.sleep(.2)
             yield
+
         yield
 
     def move_lifts (self, num_floors):
@@ -262,10 +266,10 @@ class Building():
             moves.append(self.move_lift_gen(lift, num_floors))
         interlaced = itertools.zip_longest(*moves)
 
-        '''for i in interlaced:
-            pass'''
-        for a, b, c in interlaced:
+        for i in interlaced:
             pass
+        '''for a, b, c in interlaced:
+            pass'''
 
 class Lobby:
     def __init__(self, x, y, lobby_height, lobby_width, Q=None, capacity=100):
