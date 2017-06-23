@@ -3,7 +3,8 @@ from turtle import *
 
 class Grid():
     def __init__(self):
-        g = Turtle()
+        g = Turtle(visible=False)
+        g.hideturtle()
         g.shape('circle')
         g.color('red')
         g.setx(0)
@@ -47,3 +48,4 @@ class Grid():
         line.hideturtle()
         line.right(180)
         line.forward(2000)
+        line.hideturtle()

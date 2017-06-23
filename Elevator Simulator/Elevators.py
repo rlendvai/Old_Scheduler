@@ -64,20 +64,36 @@ class Person(Turtle):
         self.current_floor = current_floor
         self.writer = Turtle()
         self.writer.hideturtle()
+        self.stamp_id = None
     # return an array with key value pairs for x, y coordinates of lower left corner
     # and height and width of shape, in pixels
     def shape_info(self):
         return {'x' : self.x, 'y':self.y, 'height':self.pixel_height, 'width':self.pixel_width}
+    def show(self, goal_position = 'inside'):
+
+        self.hideturtle()
+
+        if goal_position == 'inside':
+            self.show_floor(goal_position = 'inside')
+            print("showing goal inside")
+        time.sleep(.2)
     def move(self, distance):
         for i in range(distance):
             self.forward(1)
-    def show_floor(self):
-        self.writer.penup()
-        self.writer.setx(self.x)
-        self.writer.sety(self.y)
-        self.writer.right(90)
-        self.writer.forward(10)
-        self.writer.write(self.goal_floor, False,font=("Arial", 8, "normal"))
+    def show_floor(self, goal_position = 'inside'):
+
+        if goal_position == 'inside':
+            self.pendown()
+            self.writer.color('black')
+            self.writer.setx(self.x)
+            self.writer.sety(self.y)
+            self.writer.left(90)
+            self.writer.forward(2)
+            self.writer.showturtle()
+            self.writer.write(self.goal_floor, True, font=("Arial",8,"normal"))
+            self.pendown()
+            self.writer.color('black')
+            #self.writer.forward(5)
     def change_position_to(self,x, y):
         self.x = x
         self.y = y
@@ -198,9 +214,7 @@ class Slot():
         return self.loaded
     def show(self):
         if self.isLoaded():
-            print(self.person.xcor(), ',', self.person.ycor())
-            self.person.showturtle()
-            self.person.show_floor()
+            self.person.show()
     def move(self, distance):
         if self.isLoaded():
             self.person.move(distance)
@@ -241,7 +255,7 @@ class Building():
 
         for i in range (num_lifts):
             x = left_corner + (i * (platform_width + gap_width))
-            self.lifts.append(Lift(Platform(x, 0)))
+            self.lifts.append(Lift(Platform(x, -(config.platform_pixel_height))))
 
     def show(self):
         for lift in self.lifts:
@@ -283,6 +297,8 @@ class Lobby:
         self.x = x
         self.y = y
         self.add_all_slots()
+        self.lobby_height = lobby_height
+        self.lobby_width = lobby_width
 
     # try to create a number of slots over available seats, return the number of slots not created
     def add_slots_to_row(self, x, y):
@@ -296,6 +312,14 @@ class Lobby:
     def add_all_slots(self):
         for i in range (self.num_rows):
             self.slots.append(self.add_slots_to_row(self.x, self.y + (i*self.row_height)))
+    def show(self):
+        t=Turtle()
+        t.hideturtle()
+        t.penup()
+        t.setx(self.x)
+        t.sety(self.y)
+        t.pendown()
+        t.forward(self.slot_width*self.num_seats_in_row)
 
 
 

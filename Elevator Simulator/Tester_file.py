@@ -1,78 +1,82 @@
 from turtle import *
+from Elevators import *
 import math
 import itertools
 global screen
 screen = Screen()
-screen.tracer(50,0)
+screen.tracer(1,0)
+import grid
+import time
+
+def shape_drawer():
+    turtle=Turtle()
+    s = Shape("compound")
+    poly1 = ((0,0),(0,50),(50,50),(100,0))
+    #poly1 = ((0,0),(0,5),(5,5),(0,0))
+    s.addcomponent(poly1, "red", "blue")
+    #poly2 = ((0,0),(10,-5),(-10,-5))
+    #s.addcomponent(poly2, "blue", "red")
+
+    turtle.screen.register_shape("myshape", s)
+    turtle.shape("myshape")
+    print(turtle.xcor(), turtle.ycor())
 
 
-'''turtle=Turtle()
-s = Shape("compound")
-poly1 = ((10,-5),(0,10),(-10,-5),(3,3))
-s.addcomponent(poly1, "red", "blue")
-#poly2 = ((0,0),(10,-5),(-10,-5))
-#s.addcomponent(poly2, "blue", "red")
+def ts (turtle, x, y, inner_width, width=100, height=100):
 
-turtle.screen.register_shape("myshape", s)
-turtle.shape("myshape")
-turtle.left(90)
-turtle.forward(10)
-print(turtle.xcor(), turtle.ycor())
-'''
+    turtle.setheading(0)
+    turtle.hideturtle()
+    turtle.begin_poly()
+    turtle.begin_fill()
+    turtle.color('red')
 
-class Grid():
-    def __init__(self):
-        g = Turtle()
-        g.shape('circle')
-        g.color('red')
-        g.setx(0)
-        g.sety(0)
-        g.shapesize(.1,.1,0)
 
-        for i in range (-400,400,10):
-            self.line(i,'vertical')
-            self.line(i, 'horizontal')
+    turtle.setposition(x,y)
+    turtle.setposition(width,y)
+    turtle.setposition(width,height)
+    turtle.setposition(x,height)
+    turtle.setposition(x,y)
 
-    def line (self, coordinate, direction = 'vertical'):
-        line = Turtle()
-        line.penup()
-        line.color('grey')
-        offset = 7
-        if direction == 'vertical':
-            x = coordinate
-            line.left(90)
-            line.setx(x + offset)
-            line.sety(0)
-            if(x%50 ==0):
-                if x!= 0:
-                    line.write(str(x))
-                line.pensize(2)
-            line.setx(x)
-        elif direction == 'horizontal':
-            y = coordinate
-            line.sety(y + offset)
-            line.setx(0 + offset)
-            if(y%50 == 0):
-                line.write(str(y))
-                line.pensize(2)
-            line.setx(0)
-            line.sety(y)
-        else:
-            exit
+    turtle.setposition(x-inner_width, y-inner_width)
 
-        line.forward(400)
-        line.pendown()
-        line.hideturtle()
-        line.right(180)
-        line.forward(800)
+    turtle.setposition(width+inner_width,-y-inner_width)
+    turtle.setposition(width+inner_width+x,height+inner_width)
+    turtle.setposition(-inner_width,height+inner_width)
+    turtle.setposition(x-inner_width,y-inner_width)
 
-t = Turtle()
-t.shape("square")
-t.resizemode("user")
-t.left(90)
-t.shapesize(9.5,1)
-t.showturtle()
+    turtle.end_fill()
+    turtle.end_poly()
+    p = turtle.get_poly()
+    #register_shape('my_square', p)
+    return p
 
-Grid()
-screen.update()
+def writer():
+    w = Turtle()
+    w.shape('square')
+    w.shapesize(8,8)
+    w.color('black')
+    w.showturtle()
+    w.write("100000000000", False, font=("arial", 8, "normal"))
+
+
+
+#my_crowd = Q(200, bless=True, floor_start=1, floor_end=5)
+#shape_drawer()
+
+my_turtle = Turtle(visible=False)
+screen.register_shape('holder', ts(my_turtle,0,0,10,10,100))
+my_turtle.shape('holder')
+my_turtle.penup()
+my_turtle.showturtle()
+my_turtle.forward(100)
+my_turtle.rt(90)
+my_turtle.forward(100)
+#rect(my_turtle, 10, 100)
+#t.shape('my_square')
+
+#my_turtle.begin_fill()
+''''''
+#l = Lobby(0,0,30,100, my_crowd)
+''''''
+#grid.Grid()
 done()
