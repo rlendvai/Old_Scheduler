@@ -4,10 +4,13 @@ import random
 import itertools
 import math
 import time
+from Shapes import *
 
 global screen
 screen = Screen()
-screen.tracer(50,0)
+#screen.tracer(1,0)
+global writer_t
+writer_t = Turtle()
 
 class Platform(Turtle):
     def __init__(self, x=0, y=0):
@@ -41,7 +44,6 @@ class Platform(Turtle):
 class Person(Turtle):
     def __init__(self, x=0, y=0, goal_floor = 0, current_floor = 0):
         Turtle.__init__(self, visible=False)
-        #self._tracer(10)
         self.pixel_height = config.person_height
         self.pixel_width = config.person_width
         self.height_factor = self.pixel_height / config.SHAPE_LENGTH
@@ -54,7 +56,8 @@ class Person(Turtle):
         self.setx(x + round((self.pixel_width / 2)))
         self.sety(y + round((self.pixel_height / 2)))
         self.speed(None)
-        self.shape("square")
+        screen.register_shape('rectangle', create_rect(0,0, 20, 20))
+        self.shape('rectangle')
         self.resizemode("user")
         self.left(90)
         self.hideturtle()
@@ -62,8 +65,8 @@ class Person(Turtle):
         self.shapesize(self.width_factor, self.height_factor, 0)
         self.goal_floor = goal_floor
         self.current_floor = current_floor
-        self.writer = Turtle()
-        self.writer.hideturtle()
+        self.writer = Turtle(visible=False)
+        self.writer.penup()
         self.stamp_id = None
     # return an array with key value pairs for x, y coordinates of lower left corner
     # and height and width of shape, in pixels
@@ -71,13 +74,15 @@ class Person(Turtle):
         return {'x' : self.x, 'y':self.y, 'height':self.pixel_height, 'width':self.pixel_width}
     def show(self, goal_position = 'inside'):
 
-        self.hideturtle()
+        self.penup()
+        self.showturtle()
+        #screen.update()
+        #self.writer.setposition(self.shape_info()['x']+5, self.shape_info()['y'])
+        #self.writer.write(self.goal_floor, True, font=("Arial",8,"normal"))
+        #screen.update()
 
-        if goal_position == 'inside':
-            self.show_floor(goal_position = 'inside')
-            print("showing goal inside")
-        time.sleep(.2)
     def move(self, distance):
+        self.penup()
         for i in range(distance):
             self.forward(1)
     def show_floor(self, goal_position = 'inside'):
@@ -89,10 +94,10 @@ class Person(Turtle):
             self.writer.sety(self.y)
             self.writer.left(90)
             self.writer.forward(2)
-            self.writer.showturtle()
-            self.writer.write(self.goal_floor, True, font=("Arial",8,"normal"))
-            self.pendown()
-            self.writer.color('black')
+            self.color('black')
+            self.write('100', False, align = 'center' ,font=("Arial",8,"normal"))
+            self.color('red')
+            #self.writer.write("1000", True, font=("Arial",8,"normal"))
             #self.writer.forward(5)
     def change_position_to(self,x, y):
         self.x = x
@@ -215,6 +220,11 @@ class Slot():
     def show(self):
         if self.isLoaded():
             self.person.show()
+            self.person.getscreen().update()
+            #screen.update()
+            self.person.show_floor()
+            #screen.update()
+
     def move(self, distance):
         if self.isLoaded():
             self.person.move(distance)
@@ -234,7 +244,7 @@ class Building():
 
         self.num_floors = num_floors
         self.floor_height = config.floor_height
-        self.floors = [Floor(self.floor_height * i) for i in range (num_floors)]
+        #self.floors = [Floor(self.floor_height * i) for i in range (num_floors)]
         self.x = x
         self.y = y
         self.lifts = []
@@ -268,8 +278,7 @@ class Building():
                 yield
             lift.unload()
             print("unloading floor: ", r)
-            screen.update()
-            time.sleep(.2)
+            #screen.update()
             yield
 
         yield
@@ -322,11 +331,6 @@ class Lobby:
         t.forward(self.slot_width*self.num_seats_in_row)
 
 
-
-
-
-
-
     #given a coordinate, places rows of slots on it, and returns number of slots not created
     def create_slots(self, x, y, num_seats, num_rows, num_slots):
         pass
@@ -351,7 +355,7 @@ class Floor(Turtle):
         self.pendown()
         self.hideturtle()
         self.forward(1000)
-        screen.update()
+        #screen.update()
 
 
 

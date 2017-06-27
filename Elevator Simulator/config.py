@@ -1,4 +1,4 @@
-person_width = 6
+person_width = 10
 person_height = 10
 slot_width = 12
 platform_pixel_width = 100
