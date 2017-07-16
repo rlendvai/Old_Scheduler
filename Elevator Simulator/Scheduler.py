@@ -25,6 +25,7 @@ class Slot():
         self.appointment = None
         self.type = "General"
         self.begin_time = begin_time
+        self.fill(Appointment(30))
 
 
     def fill(self, appointment):
@@ -40,7 +41,8 @@ class Slot():
 
     def filled_string(self):
         if self.appointment != None:
-            return self.appointment.patient.name
+            return_string = self.begin_time.format('HH:mma') + ' ' + self.appointment.patient.name
+            return return_string
         else:
             return "--------------"
 
@@ -61,11 +63,10 @@ class Day():
                             )
 
     def show(self):
-        print(emphasize("day " + str(self.day_number)))
+        print(emphasize(self.begin_time.format('dddd')))
+
         for i in range(len(self.slots)):
-            if i < 10:
-                print(" ", end='')
-            print(i, self.slots[i].filled_string())
+            print(self.slots[i].filled_string())
 
     def add_appointment (self, slot_no, appointment):
         slot = self.slots[slot_no]
@@ -77,17 +78,17 @@ class Day():
 
 
 class Schedule ():
-    def __init__(self, num_days = 1, num_slots = 4, duration = 30):
-        self.start = arrow.get('2017, 07, 01, 09am', 'YYYY, MM, DD, HHa')
+    def __init__(self, num_days = 4, num_slots = 16, duration = 30):
+        self.start = arrow.get('2017, 07, 01, 09am, 00', 'YYYY, MM, DD, HHa, mm')
         self.days = []
-        self.initialize(num_slots)
+        self.initialize(num_days, num_slots)
         self.duration = duration
 
 
-    def initialize(self, num_slots):
+    def initialize(self, num_days, num_slots):
 
-        for i, day in enumerate(self.days):
-            daDay(self.start.shift(days=i), num_slots, 30)
+        for i in range (num_days):
+            self.days.append(Day(self.start.shift(days=i), num_slots, 30))
 
     def show(self):
         for day in self.days:
@@ -115,7 +116,9 @@ def main():
 
 
     myschedule.show()
-    #myschedule.cancel_appointment(0,3)
+    myschedule.cancel_appointment(0,3)
+    myschedule.cancel_appointment(1,10)
+    myschedule.cancel_appointment(3,2)
     myschedule.show()
 
 
