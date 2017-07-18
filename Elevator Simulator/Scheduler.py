@@ -40,11 +40,15 @@ class Slot():
 
 
     def filled_string(self):
+
+        return_string = self.begin_time.format('HH:mma') + ' '
+
         if self.appointment != None:
-            return_string = self.begin_time.format('HH:mma') + ' ' + self.appointment.patient.name
-            return return_string
+            return_string = return_string + self.appointment.patient.name
         else:
-            return "--------------"
+            return_string = return_string + '    <FREE>    '
+
+        return return_string
 
     def filled_status(self):
         if self.appointment == None:
@@ -68,7 +72,7 @@ class Day():
         for i in range(len(self.slots)):
             print(self.slots[i].filled_string())
 
-    def add_appointment (self, slot_no, appointment):
+    def add_appointment (self, begin_time, appointment):
         slot = self.slots[slot_no]
         return slot.fill(appointment)
 
@@ -76,9 +80,12 @@ class Day():
 
         self.slots[slot].unfill()
 
+    #def filled_slots(self):
+
+
 
 class Schedule ():
-    def __init__(self, num_days = 4, num_slots = 16, duration = 30):
+    def __init__(self, num_days = 1, num_slots = 4, duration = 30):
         self.start = arrow.get('2017, 07, 01, 09am, 00', 'YYYY, MM, DD, HHa, mm')
         self.days = []
         self.initialize(num_days, num_slots)
@@ -95,7 +102,14 @@ class Schedule ():
             day.show()
     def cancel_appointment(self, day, slot):
 
-        self.days[day].cancel_appointment(slot)
+        self.days[day-1].cancel_appointment(slot-1)
+
+    def waitlist(self):
+        waitlist=[]
+        for day in self.days:
+
+
+
 
 
 def emphasize(string):
@@ -107,24 +121,28 @@ def emphasize(string):
 def main():
 
     FRESH = True
+    DAYS = 2
+    SLOTS = 4
+    DURATION = 30
 
     if FRESH:
-        myschedule = Schedule()
+        myschedule = Schedule(DAYS, SLOTS, DURATION)
     else:
         fh = open("schedule.obj", "rb")
         myschedule = pickle.load(fh)
 
 
     myschedule.show()
-    myschedule.cancel_appointment(0,3)
-    myschedule.cancel_appointment(1,10)
-    myschedule.cancel_appointment(3,2)
+    myschedule.cancel_appointment(2,1)
+    myschedule.cancel_appointment(2,4)
     myschedule.show()
+
 
 
     fh = open("schedule.obj", "wb")
     pickle.dump(myschedule, fh)
     fh.close()
+
 
 
 main()
