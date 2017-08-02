@@ -12,7 +12,7 @@ def main():
     #screen.tracer(1,0)
     floors = 5
     lifts = 3
-    my_crowd = Q(15,bless=True, floor_start=1, floor_end=floors)
+    my_crowd = Q(20,bless=True, floor_start=1, floor_end=floors)
     my_building = Building(num_lifts = lifts, num_floors = floors)
 
     for i in range (lifts):
@@ -26,6 +26,6 @@ def main():
 
 
 grid.Grid()
+screen.update()
 main()
-
 done()

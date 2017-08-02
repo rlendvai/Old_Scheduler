@@ -8,7 +8,7 @@ from Shapes import *
 
 global screen
 screen = Screen()
-#screen.tracer(1,0)
+screen.tracer(0,1)
 global writer_t
 writer_t = Turtle()
 
@@ -95,7 +95,7 @@ class Person(Turtle):
             self.writer.left(90)
             self.writer.forward(2)
             self.color('black')
-            self.write('100', False, align = 'center' ,font=("Arial",8,"normal"))
+            self.write(self.goal_floor, False, align = 'center' ,font=("Arial",8,"normal"))
             self.color('red')
             #self.writer.write("1000", True, font=("Arial",8,"normal"))
             #self.writer.forward(5)
@@ -163,10 +163,14 @@ class Lift():
     #moves the lift and the people in it
     def move_pixels(self, distance):
         update_frames = config.update_frames
-        for i in range (distance):
-            for slot in self.slots:
+        #for i in range (distance):
+        '''for slot in self.slots:
                 slot.move(1)
-            self.platform.move(1)
+            self.platform.move(1)'''
+        for slot in self.slots:
+           slot.move(distance)
+        self.platform.move(distance)
+        #update screen after platform moves
         #screen.update()
     def move_floors(self, floors=1):
         self.move_pixels(round(self.floor_height * floors))
@@ -244,7 +248,7 @@ class Building():
 
         self.num_floors = num_floors
         self.floor_height = config.floor_height
-        #self.floors = [Floor(self.floor_height * i) for i in range (num_floors)]
+        self.floors = [Floor(self.floor_height * i) for i in range (num_floors)]
         self.x = x
         self.y = y
         self.lifts = []
@@ -270,6 +274,7 @@ class Building():
     def show(self):
         for lift in self.lifts:
             lift.show()
+
     def move_lift_gen(self, lift, num_floors):
         time_slice = 25 # in what fractions should the elevator be moved. Higher equals slower animation.
         for r in range (num_floors):
@@ -278,19 +283,33 @@ class Building():
                 yield
             lift.unload()
             print("unloading floor: ", r)
-            #screen.update()
             yield
 
         yield
 
     def move_lifts (self, num_floors):
+
+        time_slice = 25
+
+        '''for i in range (num_floors):
+            for t in range (time_slice):
+                for lift in self.lifts:
+                    lift.move_floors(1/time_slice)
+                    if t == time_slice - 1:
+                        lift.unload()
+                screen.update()'''
+
         moves = []
+
+
         for lift in self.lifts:
             moves.append(self.move_lift_gen(lift, num_floors))
-        interlaced = itertools.zip_longest(*moves)
+
+            interlaced = itertools.zip_longest(*moves)
 
         for i in interlaced:
-            pass
+            screen.update()
+
         '''for a, b, c in interlaced:
             pass'''
 
@@ -355,7 +374,7 @@ class Floor(Turtle):
         self.pendown()
         self.hideturtle()
         self.forward(1000)
-        #screen.update()
+        screen.update()
 
 
 

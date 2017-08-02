@@ -1,8 +1,8 @@
 person_width = 10
-person_height = 10
+person_height = 6
 slot_width = 12
 platform_pixel_width = 100
-platform_pixel_height = 15
+platform_pixel_height = 10
 floor_height= 50 # needs to be divisible by 25
 slot_gap_width = 5
 lift_gap_width = 7
