@@ -112,7 +112,7 @@ class Schedule ():
 
 
 
-
+  
 
 def emphasize(string):
     emphasis = "*******"
